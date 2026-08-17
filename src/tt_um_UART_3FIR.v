@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+
 `default_nettype none
 
 module tt_um_UART_3FIR (
@@ -101,11 +101,7 @@ module tt_um_UART_3FIR (
     
 endmodule
 
-`default_nettype wire
 
-
-`timescale 1ns / 1ps
-`default_nettype none
 
 module UART_RX #(
     parameter integer CLOCK_HZ  = 66_000_000,
@@ -214,11 +210,6 @@ module UART_RX #(
 
 endmodule
 
-`default_nettype wire
-
-
-`timescale 1ns / 1ps
-`default_nettype none
 
 module UART_TX #(
     parameter integer CLOCK_HZ  = 66_000_000,
@@ -319,14 +310,14 @@ module UART_TX #(
 
 endmodule
 
-`default_nettype wire
 
 
 
 
 
-`timescale 1ns / 1ps
-`default_nettype none
+
+
+
 
 module input_counter (
     input  wire       clk,
@@ -353,11 +344,7 @@ module input_counter (
 
 endmodule
 
-`default_nettype wire
 
-
-`timescale 1ns / 1ps
-`default_nettype none
 
 module _3tap_fir (
     input  wire [3:0] count,
@@ -442,4 +429,3 @@ module _3tap_fir (
     end
 
 endmodule
-`default_nettype wire
