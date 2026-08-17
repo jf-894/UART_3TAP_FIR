@@ -22,13 +22,11 @@ module tt_um_UART_3FIR (
 
     wire       uart_tx;
     wire [3:0] count;
-    wire       finished;
-    wire       fir_input_valid;
     
     reg uart_rx_meta;
     reg uart_rx_sync;
 
- assign uo_out[0]   = uart_tx;
+    assign uo_out[0]   = uart_tx;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -56,17 +54,14 @@ module tt_um_UART_3FIR (
         .clk        (clk),
         .rst_n      (rst_n),
         .rx_trigger (rx_trigger),
-        .count      (count),
-        .finished   (finished)
+        .count      (count)
     );
-
-    assign fir_input_valid = rx_trigger && !finished;
 
     _3tap_fir my_FIR (
         .count      (count),
         .user_in    (internal_data),
-        .rx_trigger (fir_input_valid),
-        .final_fir      (final_data),
+        .rx_trigger (rx_trigger), 
+        .final_fir  (final_data),
         .trigger    (fir_trigger),
         .clk        (clk),
         .rst_n      (rst_n)
@@ -90,7 +85,6 @@ module tt_um_UART_3FIR (
     assign uio_oe  = 8'b00000000;
 
 
-
     wire _unused = &{
         ena,
         ui_in[7:1],
@@ -99,6 +93,7 @@ module tt_um_UART_3FIR (
     };
     
 endmodule
+
 
 module UART_RX #(
     parameter integer CLOCK_HZ  = 66_000_000,
@@ -127,7 +122,7 @@ module UART_RX #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state         <= IDLE;
-            counter       <= 32'd0;
+            counter       <= 14'd0;
             data_count    <= 3'd0;
             received_data <= 8'd0;
             data_out      <= 8'd0;
@@ -140,7 +135,7 @@ module UART_RX #(
             case (state)
 
                 IDLE: begin
-                    counter    <= 32'd0;
+                    counter    <= 14'd0;
                     data_count <= 3'd0;
                     
                     if (data_in == 1'b0)
@@ -150,7 +145,7 @@ module UART_RX #(
                 START: begin
                     
                     if (counter == HALF_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
 
                         if (data_in == 1'b0)
                             state <= DATA;
@@ -158,14 +153,14 @@ module UART_RX #(
                             state <= IDLE;
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
                 DATA: begin
                     
                     if (counter == CLKS_PER_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
                         received_data[data_count] <= data_in;
 
                         if (data_count == 3'd7) begin
@@ -177,13 +172,13 @@ module UART_RX #(
                         end
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
                 STOP: begin
                     if (counter == CLKS_PER_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
                         
                         if (data_in == 1'b1) begin
                             data_out <= received_data;
@@ -193,7 +188,7 @@ module UART_RX #(
                         state <= IDLE;
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
@@ -206,10 +201,6 @@ module UART_RX #(
     end
 
 endmodule
-
-`default_nettype wire
-
-
 
 
 module UART_TX #(
@@ -238,7 +229,7 @@ module UART_TX #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state         <= IDLE;
-            counter       <= 32'd0;
+            counter       <= 14'd0;
             data_count    <= 3'd0;
             transmit_data <= 8'd0;
             test          <= 1'b1;
@@ -248,7 +239,7 @@ module UART_TX #(
 
                 IDLE: begin
                     test       <= 1'b1;
-                    counter    <= 32'd0;
+                    counter    <= 14'd0;
                     data_count <= 3'd0;
 
                     if (trigger) begin
@@ -261,11 +252,11 @@ module UART_TX #(
                     test <= 1'b0;
 
                     if (counter == CLKS_PER_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
                         state   <= DATA;
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
@@ -273,7 +264,7 @@ module UART_TX #(
                     test <= transmit_data[data_count];
 
                     if (counter == CLKS_PER_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
 
                         if (data_count == 3'd7) begin
                             data_count <= 3'd0;
@@ -284,7 +275,7 @@ module UART_TX #(
                         end
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
@@ -292,11 +283,11 @@ module UART_TX #(
                     test <= 1'b1;
 
                     if (counter == CLKS_PER_BIT - 1) begin
-                        counter <= 32'd0;
+                        counter <= 14'd0;
                         state   <= IDLE;
                     end
                     else begin
-                        counter <= counter + 32'd1;
+                        counter <= counter + 14'd1;
                     end
                 end
 
@@ -312,19 +303,16 @@ module UART_TX #(
 endmodule
 
 
-
 module input_counter (
     input  wire       clk,
     input  wire       rst_n,
     input  wire       rx_trigger,
-    output reg  [3:0] count,
-    output reg        finished
+    output reg  [3:0] count
 );
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             count    <= 4'd1;
-            finished <= 1'b0;
         end
         else if (rx_trigger) begin
             if (count < 4'd6) begin
@@ -337,7 +325,6 @@ module input_counter (
     end
 
 endmodule
-
 
 
 module _3tap_fir (
@@ -385,7 +372,7 @@ module _3tap_fir (
             coefficient1 <= 8'd0;
             coefficient2 <= 8'd0;
 
-            final_fir        <= 8'd0;
+            final_fir    <= 8'd0;
             trigger      <= 1'b0;
             calc_pending <= 1'b0;
         end
@@ -423,3 +410,5 @@ module _3tap_fir (
     end
 
 endmodule
+
+`default_nettype wire
