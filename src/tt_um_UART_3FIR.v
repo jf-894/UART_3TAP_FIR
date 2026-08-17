@@ -106,8 +106,11 @@ module UART_RX #(
     output reg        trigger
 );
 
-    localparam [13:0] CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
-    localparam [13:0] HALF_BIT     = CLKS_PER_BIT / 2;
+    localparam integer CLKS_PER_BIT_INT = CLOCK_HZ / BAUD_RATE;
+    localparam integer HALF_BIT_INT     = CLKS_PER_BIT_INT / 2;
+
+    localparam [13:0] CLKS_PER_BIT = CLKS_PER_BIT_INT[13:0];
+    localparam [13:0] HALF_BIT     = HALF_BIT_INT[13:0];
 
     localparam [1:0] IDLE  = 2'b00;
     localparam [1:0] START = 2'b01;
@@ -214,7 +217,8 @@ module UART_TX #(
     output reg        test
 );
 
-    localparam [13:0] CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
+    localparam integer CLKS_PER_BIT_INT = CLOCK_HZ / BAUD_RATE;
+    localparam [13:0]  CLKS_PER_BIT     = CLKS_PER_BIT_INT[13:0];
 
     localparam [1:0] IDLE  = 2'b00;
     localparam [1:0] START = 2'b01;
