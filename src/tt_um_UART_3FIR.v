@@ -1,4 +1,3 @@
-
 `default_nettype none
 
 module tt_um_UART_3FIR (
@@ -45,7 +44,7 @@ module tt_um_UART_3FIR (
     UART_RX #(
         .CLOCK_HZ  (CLOCK_HZ),
         .BAUD_RATE (BAUD_RATE)
-    ) my_RX (
+        ) my_RX (
         .data_in  (uart_rx_sync),
         .clk      (clk),
         .rst_n    (rst_n),
@@ -67,7 +66,7 @@ module tt_um_UART_3FIR (
         .count      (count),
         .user_in    (internal_data),
         .rx_trigger (fir_input_valid),
-        .final      (final_data),
+        .final_fir      (final_data),
         .trigger    (fir_trigger),
         .clk        (clk),
         .rst_n      (rst_n)
@@ -100,8 +99,6 @@ module tt_um_UART_3FIR (
     };
     
 endmodule
-
-
 
 module UART_RX #(
     parameter integer CLOCK_HZ  = 66_000_000,
@@ -210,6 +207,10 @@ module UART_RX #(
 
 endmodule
 
+`default_nettype wire
+
+
+
 
 module UART_TX #(
     parameter integer CLOCK_HZ  = 66_000_000,
@@ -312,13 +313,6 @@ endmodule
 
 
 
-
-
-
-
-
-
-
 module input_counter (
     input  wire       clk,
     input  wire       rst_n,
@@ -350,7 +344,7 @@ module _3tap_fir (
     input  wire [3:0] count,
     input  wire [7:0] user_in,
     input  wire       rx_trigger,
-    output reg  [7:0] final,
+    output reg  [7:0] final_fir,
     output reg        trigger,
     input  wire       clk,
     input  wire       rst_n
@@ -391,7 +385,7 @@ module _3tap_fir (
             coefficient1 <= 8'd0;
             coefficient2 <= 8'd0;
 
-            final        <= 8'd0;
+            final_fir        <= 8'd0;
             trigger      <= 1'b0;
             calc_pending <= 1'b0;
         end
@@ -419,9 +413,9 @@ module _3tap_fir (
                 calc_pending <= 1'b0;
                 
                 if (fir_sum > 20'd255)
-                    final <= 8'd255;
+                    final_fir <= 8'd255;
                 else
-                    final <= fir_sum[7:0];
+                    final_fir <= fir_sum[7:0];
                     
                 trigger <= 1'b1; 
             end
