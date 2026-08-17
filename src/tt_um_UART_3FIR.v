@@ -106,8 +106,8 @@ module UART_RX #(
     output reg        trigger
 );
 
-    localparam integer CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
-    localparam integer HALF_BIT     = CLKS_PER_BIT / 2;
+    localparam [13:0] CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
+    localparam [13:0] HALF_BIT     = CLKS_PER_BIT / 2;
 
     localparam [1:0] IDLE  = 2'b00;
     localparam [1:0] START = 2'b01;
@@ -144,7 +144,7 @@ module UART_RX #(
 
                 START: begin
                     
-                    if (counter == HALF_BIT - 1) begin
+                    if (counter == HALF_BIT - 14'd1) begin
                         counter <= 14'd0;
 
                         if (data_in == 1'b0)
@@ -159,7 +159,7 @@ module UART_RX #(
 
                 DATA: begin
                     
-                    if (counter == CLKS_PER_BIT - 1) begin
+                    if (counter == CLKS_PER_BIT - 14'd1) begin
                         counter <= 14'd0;
                         received_data[data_count] <= data_in;
 
@@ -177,7 +177,7 @@ module UART_RX #(
                 end
 
                 STOP: begin
-                    if (counter == CLKS_PER_BIT - 1) begin
+                    if (counter == CLKS_PER_BIT - 14'd1) begin
                         counter <= 14'd0;
                         
                         if (data_in == 1'b1) begin
@@ -214,7 +214,7 @@ module UART_TX #(
     output reg        test
 );
 
-    localparam integer CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
+    localparam [13:0] CLKS_PER_BIT = CLOCK_HZ / BAUD_RATE;
 
     localparam [1:0] IDLE  = 2'b00;
     localparam [1:0] START = 2'b01;
@@ -251,7 +251,7 @@ module UART_TX #(
                 START: begin
                     test <= 1'b0;
 
-                    if (counter == CLKS_PER_BIT - 1) begin
+                    if (counter == CLKS_PER_BIT - 14'd1) begin
                         counter <= 14'd0;
                         state   <= DATA;
                     end
@@ -263,7 +263,7 @@ module UART_TX #(
                 DATA: begin
                     test <= transmit_data[data_count];
 
-                    if (counter == CLKS_PER_BIT - 1) begin
+                    if (counter == CLKS_PER_BIT - 14'd1) begin
                         counter <= 14'd0;
 
                         if (data_count == 3'd7) begin
@@ -282,7 +282,7 @@ module UART_TX #(
                 STOP: begin
                     test <= 1'b1;
 
-                    if (counter == CLKS_PER_BIT - 1) begin
+                    if (counter == CLKS_PER_BIT - 14'd1) begin
                         counter <= 14'd0;
                         state   <= IDLE;
                     end
