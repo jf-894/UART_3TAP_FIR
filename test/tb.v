@@ -80,16 +80,16 @@ endtask
     rst_n = 1;
     #10000;
     //Samples
-    UART_OUT(8'd0);
+    UART_OUT(8'd1);
     
-    UART_OUT(8'd0);
+    UART_OUT(8'd1);
    
     UART_OUT(8'd1);
   
     //Coefficients
-    UART_OUT(8'd0);
+    UART_OUT(8'd1);
     
-    UART_OUT(8'd0);
+    UART_OUT(8'd1);
   
     UART_OUT(8'd1);
     
