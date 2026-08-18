@@ -63,4 +63,4 @@ async def test_project(dut):
     dut._log.info("Waiting for processing...")
     await Timer(15_000_000, units='ns')
 
-    assert dut.uo_out.value == 3
+    assert dut.uo_out[0].value == 3
