@@ -29,7 +29,7 @@ module tb ();
 `endif
 
   // Replace tt_um_example with your module name:
-  tt_um_UART_3FIR (
+  tt_um_UART_3FIR dut (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
