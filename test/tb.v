@@ -79,6 +79,7 @@ endtask
     #100;
     rst_n = 1;
     #10000;
+       
     //Samples
     UART_OUT(8'd1);
     
