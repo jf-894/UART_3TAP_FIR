@@ -93,7 +93,7 @@ module tt_um_UART_3FIR (
     };
     
 endmodule
-
+//Submodule
 
 module UART_RX #(
     parameter integer CLOCK_HZ  = 66_000_000,
