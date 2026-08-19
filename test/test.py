@@ -21,7 +21,7 @@ async def uart_tx(dut, data):
     dut.ui_in.value = 1
     await Timer(104167, unit='ns')
     
-    # Reduced delay between data bytes to 10us (was 500us)
+    # Delay between data bytes 
     await Timer(10000, unit='ns')
 
 # Manual UART RX function for physical 9600 baud
@@ -29,7 +29,8 @@ async def uart_rx(dut):
     # 1. Wait for the start bit (bit 0 drops from 1 to 0)
     while True:
         await Edge(dut.uo_out)
-        if dut.uo_out.value.binstr[-1] == '0':
+        # FIXED: Removed deprecated .binstr in favor of str()
+        if str(dut.uo_out.value)[-1] == '0':
             break
             
     # 2. Wait half a bit period to sample in the middle of the start bit
@@ -42,8 +43,8 @@ async def uart_rx(dut):
         # Wait a full bit period (1 / 9600 sec)
         await Timer(104167, unit='ns')
         
-        # Read the current bit value of uo_out[0]
-        bit_val = int(dut.uo_out.value.binstr[-1])
+        # FIXED: Removed deprecated .binstr in favor of str()
+        bit_val = int(str(dut.uo_out.value)[-1])
         received_byte |= (bit_val << i)
         
     # 4. Wait a full bit period to reach the center of the stop bit
@@ -78,15 +79,21 @@ async def test_project(dut):
     await uart_tx(dut, 1)
     await uart_tx(dut, 1)
 
-    # Send Coefficients
+    # Send first two Coefficients
     dut._log.info("Sending Coefficients...")
     await uart_tx(dut, 1)
     await uart_tx(dut, 1)
+    
+    # FIXED: Start listening in the background BEFORE sending the final byte 
+    # so we don't miss the hardware's immediate response!
+    rx_task = cocotb.start_soon(uart_rx(dut))
+    
+    # Send the final Coefficient
     await uart_tx(dut, 1)
 
-    # Wait for the hardware to process and intercept the serial output
+    # Wait for the background RX task to finish capturing the output
     dut._log.info("Waiting for processing and receiving UART output...")
-    result = await uart_rx(dut) 
+    result = await rx_task 
     
     dut._log.info(f"Received FIR calculation result: {result}")
     
