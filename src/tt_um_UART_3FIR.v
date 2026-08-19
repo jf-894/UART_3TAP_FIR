@@ -316,7 +316,7 @@ module input_counter (
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            count    <= 4'd1;
+            count    <= 4'd0;
         end
         else if (rx_trigger) begin
             if (count < 4'd6) begin
