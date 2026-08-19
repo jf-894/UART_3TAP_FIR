@@ -12,7 +12,7 @@ This is a UART, 3 Tap FIR Filter. It works by sending 3 samples individually, ea
 
 ## How to test
 
-1)  Install HTerm, unzip the folder, and open the hterm.exe. Link: HTerm - der-hammer[https://www.der-hammer.info/pages/terminal.html]
+1)  Install HTerm, unzip the folder, and open the hterm.exe. Link: [HTerm - der-hammer](https://www.der-hammer.info/pages/terminal.html)
 2) Ensure the setting is the same as the screenshots, except for the COM Port. The COM Port number for the FPGA board can be found in Device Manager under Ports on Windows.
  <img width="2857" height="350" alt="Screenshot 2026-07-27 114752" src="https://github.com/user-attachments/assets/4914b5ff-f5fb-4cf9-945d-f2985e2d427a" />
 
