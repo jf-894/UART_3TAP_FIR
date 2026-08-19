@@ -14,7 +14,7 @@ This is a UART, 3 Tap FIR Filter. It works by sending 3 samples individually, ea
 
 You are welcome to use any software other than HTerm if you can't use it or have difficulty with it. Just as long as you can follow the format of step 5
 
-1)  When using the UART to USB adapter, connect the RX cable to the Tinytapeout board's TX pin(Input pin 0) and the TX cable to the Tinytapeout board's RX pin(Output pin 0). Connect the Ground cable to the Ground pin of the Tinytapeout board. 
+1)  When using the UART to USB adapter, connect the RX cable to the Tinytapeout board's TX pin(Output pin 0) and the TX cable to the Tinytapeout board's RX pin(Input pin 0). Connect the Ground cable to the Ground pin of the Tinytapeout board. 
 
 2) Install HTerm, unzip the folder, and open the hterm.exe. Link: [HTerm - der-hammer](https://www.der-hammer.info/pages/terminal.html)
    Website-https://www.der-hammer.info/pages/terminal.html
@@ -33,7 +33,7 @@ The image below shows the final result
 
 
 ## Using Microcontrollers
-1) Set up your UART protocol based on your microcontroller and ensure the baud rate is 9600. Then connect the microcontroller's RX pin to the Tinytapeout board's TX pin(Input pin 0). Then connect the microcontroller's TX pin to the Tinytapeout board's RX pin(Output pin 0). Lastly and most importantly, connect the Ground pin of the microcontroller to the Ground pin of the Tinytapeout board.
+1) Set up your UART protocol based on your microcontroller and ensure the baud rate is 9600. Then connect the microcontroller's RX pin to the Tinytapeout board's TX pin(Output pin 0). Then connect the microcontroller's TX pin to the Tinytapeout board's RX pin(Input pin 0). Lastly and most importantly, connect the Ground pin of the microcontroller to the Ground pin of the Tinytapeout board.
 2) Write your code so that it sends 3 samples individually, each with a value no greater than 255. Then send 3 individual coefficients, with no value greater than 255. Ensure you have a variable to store the 8-bit data.
 
 
