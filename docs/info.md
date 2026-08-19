@@ -17,6 +17,7 @@ You are welcome to use any software other than HTerm if you can't use it or have
 1)  When using the UART to USB adapter, connect the RX cable to the Tinytapeout board's TX pin(Input pin 0) and the TX cable to the Tinytapeout board's RX pin(Output pin 0). Connect the Ground cable to the Ground pin of the Tinytapeout board. 
 
 2) Install HTerm, unzip the folder, and open the hterm.exe. Link: [HTerm - der-hammer](https://www.der-hammer.info/pages/terminal.html)
+   Website-https://www.der-hammer.info/pages/terminal.html
    
 3) Ensure the setting is the same as the screenshots, except for the COM Port. The COM Port number for the FPGA board can be found in Device Manager under Ports on Windows.
  <img width="2857" height="350" alt="Screenshot 2026-07-27 114752" src="https://github.com/user-attachments/assets/4914b5ff-f5fb-4cf9-945d-f2985e2d427a" />
