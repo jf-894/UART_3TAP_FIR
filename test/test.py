@@ -5,6 +5,7 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import Timer, Edge
 
+
 # Manual UART TX function for 9600 baud
 async def uart_tx(dut, data):
     # Start bit (0)
