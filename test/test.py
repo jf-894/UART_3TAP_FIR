@@ -3,7 +3,7 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import Timer, FallingEdge
+from cocotb.triggers import Timer, Edge
 
 # Manual UART TX function for 9600 baud
 async def uart_tx(dut, data):
@@ -24,16 +24,14 @@ async def uart_tx(dut, data):
     # Delay between data bytes (500us)
     await Timer(500000, units='ns')
 
-# NEW: Manual UART RX function for 9600 baud to avoid cocotbext-uart
+# Manual UART RX function for 9600 baud
 async def uart_rx(dut):
-    # 1. Wait for the start bit (line drops from 1 to 0)
+    # 1. Wait for the start bit (bit 0 drops from 1 to 0)
     while True:
-    await Edge(dut.uo_out)
-    # Check if bit 0 went low. 
-    # Using .binstr handles 'X' or 'Z' states safely without crashing.
-    if dut.uo_out.value.binstr[-1] == '0': 
-        break
-    
+        await Edge(dut.uo_out)
+        if dut.uo_out.value.binstr[-1] == '0':
+            break
+            
     # 2. Wait half a bit period to sample in the middle of the start bit
     await Timer(52083, units='ns')
     
@@ -44,8 +42,8 @@ async def uart_rx(dut):
         # Wait a full bit period (1 / 9600 sec)
         await Timer(104167, units='ns')
         
-        # Read the current bit value and shift it into place
-        bit_val = dut.uo_out[0].value.integer
+        # Read the current bit value of uo_out[0] (the last character in the binstr)
+        bit_val = int(dut.uo_out.value.binstr[-1])
         received_byte |= (bit_val << i)
         
     # 4. Wait a full bit period to reach the center of the stop bit
