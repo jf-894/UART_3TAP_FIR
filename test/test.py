@@ -3,9 +3,10 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles, Timer
+from cocotb.triggers import Timer
+from cocotbext.uart import UartSink  
 
-# Replaces your Verilog UART_OUT task
+
 async def uart_tx(dut, data):
     # Start bit (0)
     dut.ui_in.value = 0
@@ -28,10 +29,13 @@ async def uart_tx(dut, data):
 async def test_project(dut):
     dut._log.info("Start Simulation")
 
-    # Replaces your Verilog 'always #7.575 clk = ~clk;'
-    # 15.15ns period = ~66 MHz clock
+   
+    
     clock = Clock(dut.clk, 15.15, units="ns")
     cocotb.start_soon(clock.start())
+
+   
+    uart_receiver = UartSink(dut.uo_out[0], baud=9600, bits=8)
 
     # Initial values
     dut.ena.value = 1
@@ -44,7 +48,7 @@ async def test_project(dut):
     await Timer(100, units='ns')
     dut.rst_n.value = 1
     
-    # Replaces your Verilog '#10000;'
+  
     await Timer(10000, units='ns')
 
     # Send Samples
@@ -59,8 +63,12 @@ async def test_project(dut):
     await uart_tx(dut, 1)
     await uart_tx(dut, 1)
 
-    # Replaces your Verilog '#15_000_000;'
-    dut._log.info("Waiting for processing...")
-    await Timer(15_000_000, units='ns')
-
-    assert dut.uo_out[0].value == 3
+    # 3. Wait for the hardware to process
+    dut._log.info("Waiting for processing and UART output...")
+    received_data = await uart_receiver.read(count=1) 
+    
+    # 4. Extract the integer and assert
+    result = received_data[0]
+    dut._log.info(f"Received FIR calculation result: {result}")
+    
+    assert result == 3, f"FIR calculation failed. Expected 3, got {result}"
