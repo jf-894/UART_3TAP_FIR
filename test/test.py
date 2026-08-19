@@ -27,7 +27,12 @@ async def uart_tx(dut, data):
 # NEW: Manual UART RX function for 9600 baud to avoid cocotbext-uart
 async def uart_rx(dut):
     # 1. Wait for the start bit (line drops from 1 to 0)
-    await FallingEdge(dut.uo_out[0])
+    while True:
+    await Edge(dut.uo_out)
+    # Check if bit 0 went low. 
+    # Using .binstr handles 'X' or 'Z' states safely without crashing.
+    if dut.uo_out.value.binstr[-1] == '0': 
+        break
     
     # 2. Wait half a bit period to sample in the middle of the start bit
     await Timer(52083, units='ns')
