@@ -29,25 +29,25 @@ async def uart_rx(dut):
     # 1. Wait for the start bit (bit 0 drops from 1 to 0)
     while True:
         await Edge(dut.uo_out)
-        # FIXED: Removed deprecated .binstr in favor of str()
+        
         if str(dut.uo_out.value)[-1] == '0':
             break
             
-    # 2. Wait half a bit period to sample in the middle of the start bit
+    
     await Timer(52083, unit='ns')
     
     received_byte = 0
     
     # 3. Sample the 8 data bits (LSB first)
     for i in range(8):
-        # Wait a full bit period (1 / 9600 sec)
+        
         await Timer(104167, unit='ns')
         
-        # FIXED: Removed deprecated .binstr in favor of str()
+        
         bit_val = int(str(dut.uo_out.value)[-1])
         received_byte |= (bit_val << i)
         
-    # 4. Wait a full bit period to reach the center of the stop bit
+    
     await Timer(104167, unit='ns')
     
     return received_byte
@@ -84,18 +84,18 @@ async def test_project(dut):
     await uart_tx(dut, 1)
     await uart_tx(dut, 1)
     
-    # FIXED: Start listening in the background BEFORE sending the final byte 
-    # so we don't miss the hardware's immediate response!
+     
+    
     rx_task = cocotb.start_soon(uart_rx(dut))
     
     # Send the final Coefficient
     await uart_tx(dut, 1)
 
-    # Wait for the background RX task to finish capturing the output
+    
     dut._log.info("Waiting for processing and receiving UART output...")
     result = await rx_task 
     
     dut._log.info(f"Received FIR calculation result: {result}")
     
-    # Assert the reconstructed parallel integer
+    
     assert result == 3, f"FIR calculation failed. Expected 3, got {result}"
