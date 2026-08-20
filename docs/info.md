@@ -26,7 +26,8 @@ You are welcome to use any software other than HTerm if you can't use it or have
  
 5) To send the required data, follow the format as: Sample0 Sample1 Sample2 Coefficient0 Coefficient1 Coefficient2. Ensure there is space between the values. No values above 255. When ready, press Enter, and the result will appear in the “Received Data” section.
  <img width="3280" height="725" alt="Screenshot 2026-07-27 115007" src="https://github.com/user-attachments/assets/b7286e85-d887-4483-b063-dd6d4e4988c5" />
- 
+
+
 The image below shows the final result
  <img width="2065" height="930" alt="Screenshot 2026-07-27 115133" src="https://github.com/user-attachments/assets/50419999-f792-4199-963e-da5488563f9d" />
 
@@ -34,6 +35,7 @@ The image below shows the final result
 
 ## Using Microcontrollers
 1) Set up your UART protocol based on your microcontroller and ensure the baud rate is 9600. Then connect the microcontroller's RX pin to the Tinytapeout board's TX pin(Output pin 0). Then connect the microcontroller's TX pin to the Tinytapeout board's RX pin(Input pin 0). Lastly and most importantly, connect the Ground pin of the microcontroller to the Ground pin of the Tinytapeout board.
+
 2) Write your code so that it sends 3 samples individually, each with a value no greater than 255. Then send 3 individual coefficients, with no value greater than 255. Ensure you have a variable to store the 8-bit data.
 
 
