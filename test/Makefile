@@ -1,7 +1,7 @@
 # Makefile
 # See https://docs.cocotb.org/en/stable/quickstart.html for more info
 
-# defaults
+# defaults 
 SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
