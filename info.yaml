@@ -3,7 +3,7 @@ project:
   title:        "UART_3FIR"      # Project title
   author:       "Jordan"      # Your name
   discord:      "jf2636"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "3 Tap Filter using UART at 9600 baud rate"      # One line description of what your project does
+  description:  "3 Tap FIR Filter using UART at 9600 baud rate"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     66000000     # Clock frequency in Hz (or 0 if not applicable)
 
