@@ -8,7 +8,16 @@ You can also include images in this folder and reference them in the markdown. E
 -->
 
 ## How it works
-This is a UART, 3 Tap FIR Filter. It works by sending 3 samples individually, each with a value no greater than 255. Then send 3 different coefficients, with no value greater than 255. All being sent via UART at 9600 Baud Rate. It can communicate with the microcontroller or your personal computer.
+This is a UART, 3 Tap FIR Filter. It works by sending 3 samples individually, each with a value no greater than 255. Then send 3 different coefficients, with no value greater than 255. All being sent via UART at 9600 Baud Rate. All samples and Coefficients are must be 8-bit. The result is limited to an 8-bit value, which ranges from 0 to 255. It can communicate with the microcontroller or your personal computer. 
+
+The values are received in the following order:
+
+Sample0 Sample1 Sample2 Coefficient0 Coefficient1 Coefficient2
+
+The FIR filter calculates:
+
+Output = (Sample0 × Coefficient0) + (Sample1 × Coefficient1) + (Sample2 × Coefficient2)
+
 
 ## How to test
 
