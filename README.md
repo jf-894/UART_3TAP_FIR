@@ -10,6 +10,9 @@ Tiny Tapeout is an educational project that aims to make it easier and cheaper t
 
 To learn more and get started, visit https://tinytapeout.com.
 
+## How to use
+To use, refer to the info.md in the docs
+
 ## Set up your Verilog project
 
 1. Add your Verilog files to the `src` folder.
